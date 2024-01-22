@@ -6,7 +6,6 @@ import { adminPaths } from "./admin.route";
 import { routesGenerator } from "../utils/routesGenerator";
 import { facultyPaths } from "./faculty.route";
 import { studentPaths } from "./student.routes";
-import ProtectedRoute from "../components/layout/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
