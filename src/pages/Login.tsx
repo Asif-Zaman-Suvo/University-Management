@@ -19,6 +19,11 @@ const Login = () => {
   //   },
   // });
 
+  const defaultValues = {
+    userId: "A-0001",
+    password: "admin123",
+  };
+
   const [login] = useLoginMutation();
 
   const onSubmit = async (data: FieldValues) => {
@@ -40,7 +45,7 @@ const Login = () => {
   };
   return (
     <Row justify={"center"} align={"middle"} style={{ height: "100vh" }}>
-      <PhForm onSubmit={onSubmit}>
+      <PhForm onSubmit={onSubmit} defaultValues={defaultValues}>
         <PhInput type="text" name="userId" label="ID:" />
 
         <PhInput type="text" name="password" label="password" />
