@@ -1,27 +1,35 @@
-import { Table, TableColumnsType, TableProps } from "antd";
+import { Button, Table, TableColumnsType, TableProps } from "antd";
 import { useGetAllAcademicSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
+import { TAcademicSemester } from "../../../types/academicManagement.type";
+import { useState } from "react";
+import { TQueryParams } from "../../../constants/global";
+
+type TTableData = Pick<
+  TAcademicSemester,
+  "name" | "year" | "startMonth" | "endMonth"
+>;
 const AcademicSemester = () => {
-  const { data: semesterData } = useGetAllAcademicSemestersQuery(undefined);
+  const [params, setParams] = useState<TQueryParams[] | undefined>(undefined);
+  const {
+    data: semesterData,
+    isLoading,
+    isFetching,
+  } = useGetAllAcademicSemestersQuery(params);
   console.log(semesterData);
 
   const tableData = semesterData?.data?.map(
     ({ _id, name, startMonth, endMonth, year }) => ({
-      _id,
+      key: _id,
       name,
       year,
       startMonth,
       endMonth,
     })
   );
-  const columns: TableColumnsType<DataType> = [
+  const columns: TableColumnsType<TTableData> = [
     {
       title: "Name",
+      key: "name",
       dataIndex: "name",
       filters: [
         {
@@ -37,60 +45,63 @@ const AcademicSemester = () => {
           value: "Fall",
         },
       ],
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      onFilter: (value: string, record) => record.name.indexOf(value) === 0,
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"],
     },
     {
       title: "Year",
+      key: "year",
       dataIndex: "year",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.age - b.age,
     },
     {
       title: "Start Month",
+      key: "startMonth",
       dataIndex: "startMonth",
-      filters: [
-        {
-          text: "London",
-          value: "London",
-        },
-        {
-          text: "New York",
-          value: "New York",
-        },
-      ],
-      onFilter: (value: string, record) => record.address.indexOf(value) === 0,
     },
     {
       title: "End Month",
+      key: "endMonth",
       dataIndex: "endMonth",
-      filters: [
-        {
-          text: "London",
-          value: "London",
-        },
-        {
-          text: "New York",
-          value: "New York",
-        },
-      ],
-      onFilter: (value: string, record) => record.address.indexOf(value) === 0,
+    },
+
+    {
+      title: "Action",
+      key: "x",
+      render() {
+        return (
+          <div>
+            <Button>Update</Button>
+          </div>
+        );
+      },
     },
   ];
 
-  const onChange: TableProps<DataType>["onChange"] = (
+  const onChange: TableProps<TTableData>["onChange"] = (
     pagination,
     filters,
     sorter,
     extra
   ) => {
-    console.log("params", pagination, filters, sorter, extra);
+    if (extra.action === "filter") {
+      const queryParams: TQueryParams[] = [];
+      filters.name?.forEach((item) =>
+        queryParams.push({ name: "name", value: item })
+      );
+      setParams(queryParams);
+    }
   };
 
-  return <Table columns={columns} dataSource={tableData} onChange={onChange} />;
+  if (isLoading) {
+    return <p>Loading.....</p>;
+  }
+
+  return (
+    <Table
+      loading={isFetching}
+      columns={columns}
+      dataSource={tableData}
+      onChange={onChange}
+    />
+  );
 };
 
 export default AcademicSemester;
