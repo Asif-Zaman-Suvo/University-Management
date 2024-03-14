@@ -1,11 +1,7 @@
 import { Button, Col, Flex } from "antd";
-
 import { FieldValues, SubmitHandler } from "react-hook-form";
-
 import { useState } from "react";
-
 import moment from "moment";
-
 import {
   useCreateOfferedCourseMutation,
   useGetAllCoursesQuery,
@@ -21,7 +17,7 @@ import PhSelect from "../../../components/form/PhSelect";
 import PhSelectWithWatch from "../../../components/form/PhSelectWithWatch";
 import PhInput from "../../../components/form/PhInput";
 import { weekDaysOptions } from "../../../constants/global";
-import PhDatePicker from "../../../components/form/PhDatePicker";
+import PhTimePicker from "../../../components/form/PhTimePicker";
 
 const OfferCourse = () => {
   const [courseId, setCourseId] = useState("");
@@ -124,8 +120,8 @@ const OfferCourse = () => {
             name="days"
             label="Days"
           />
-          <PhDatePicker name="startTime" label="Start Time" />
-          <PhDatePicker name="endTime" label="End Time" />
+          <PhTimePicker name="startTime" label="Start Time" />
+          <PhTimePicker name="endTime" label="End Time" />
 
           <Button htmlType="submit">Submit</Button>
         </PhForm>
